@@ -40,7 +40,8 @@ function main() {
 	visibleCanvas.width = video.width;
 	visibleCanvas.height = video.height;
 	var visibleCanvasScalingFactor = visibleCanvas.width / canvas.width;
-	visibleCanvas.context.scale(visibleCanvasScalingFactor, visibleCanvasScalingFactor);
+	visibleCanvas.context.translate(visibleCanvas.width, 0); // both needed to reflect image
+	visibleCanvas.context.scale(-visibleCanvasScalingFactor, visibleCanvasScalingFactor);
 
 	if (navigator.getUserMedia) {
 		navigator.getUserMedia({video: true}, function(stream) {
