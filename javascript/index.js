@@ -40,8 +40,7 @@ function main() {
 	visibleCanvas.width = video.width;
 	visibleCanvas.height = video.height;
 	var visibleCanvasScalingFactor = visibleCanvas.width / canvas.width;
-	visibleCanvas.context.translate(visibleCanvas.width, 0); // both needed to reflect image
-	visibleCanvas.context.scale(-visibleCanvasScalingFactor, visibleCanvasScalingFactor);
+	visibleCanvas.context.scale(visibleCanvasScalingFactor, visibleCanvasScalingFactor);
 
 	if (navigator.getUserMedia) {
 		navigator.getUserMedia({video: true}, function(stream) {
@@ -72,7 +71,14 @@ function main() {
 
 		var movementIndexes = [];
 
+		// Reflect the video when drawing onto the canvas:
+		// originally reflected only visible canvas, but then the actual coords weren't reflected
+		// watch out if inefficient? if its too slow can revert to using flipped x axis (but reflect visibleCanvas)
+		context.save();
+		context.translate(canvas.width, 0);
+		context.scale(-1, 1);
 		context.drawImage(video, 0, 0, canvas.width, canvas.height);
+		context.restore();
 		var thisFrameImageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
 		if (lastFrameImageData === null) {
